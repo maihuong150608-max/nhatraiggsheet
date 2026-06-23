@@ -1027,6 +1027,51 @@
     }
 }
 
+ const result = await response.json();
+                
+                if (result.result === "success") {
+                    // 1. Lưu cục bộ để tạo ngay một thẻ Polaroid đẹp mắt trên giao diện mà không cần load lại trang
+                    const entry = {
+                        name: name,
+                        side: side,
+                        wishes: wishes,
+                        date: dateStr
+                    };
+                    
+                    let stored = JSON.parse(localStorage.getItem('cinelove_polaroid_wishes')) || [];
+                    stored.unshift(entry);
+                    localStorage.setItem('cinelove_polaroid_wishes', JSON.stringify(stored));
+                    
+                    // 2. Đồng bộ lại sổ lưu bút
+                    fetchWishes();
+                    
+                    // 3. Reset form nhập liệu
+                    document.getElementById('rsvp-form').reset();
+                    
+                    // 4. Mở modal báo gửi thành công xịn xò
+                    document.getElementById('success-modal').classList.remove('hidden');
+
+                    // 5. Hiệu ứng cơn mưa tim ngọt ngào bung tỏa
+                    for (let i = 0; i < 35; i++) {
+                        particles.push(new Particle('heart', true));
+                    }
+                } else {
+                    alert("Có lỗi từ hệ thống Google: " + result.error);
+                }
+            } catch (error) {
+                console.error("Lỗi kết nối mạng:", error);
+                alert("Không thể kết nối lưu trữ! Bạn vui lòng kiểm tra lại kết nối mạng hoặc thử lại.");
+            } finally {
+                // Khôi phục nút bấm về trạng thái ban đầu
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnText;
+            }
+        }
+
+        function closeSuccessModal() {
+            document.getElementById('success-modal').classList.add('hidden');
+        }
+        
         window.addEventListener('DOMContentLoaded', () => {
             fetchWishes();
         });
