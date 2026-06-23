@@ -517,40 +517,42 @@
 
     <script>
         async function handleRSVP(event) {
-            event.preventDefault(); 
-            const submitBtn = event.target.querySelector('button[type="submit"]');
-            const originalText = submitBtn.innerText;
-            submitBtn.innerText = "Đang gửi...";
-            submitBtn.disabled = true;
+    event.preventDefault(); // Chặn việc load lại trang
+    
+    // Thu thập dữ liệu
+    const formData = {
+        name: document.getElementById("rsvp-name").value,
+        side: document.querySelector('input[name="rsvp-side"]:checked')?.value || "Chưa chọn",
+        status: document.querySelector('input[name="rsvp-status"]:checked')?.value || "Chưa chọn",
+        guests: document.getElementById("rsvp-guests").value,
+        wishes: document.getElementById("rsvp-wishes").value
+    };
 
-            const formData = {
-                name: document.getElementById("rsvp-name").value,
-                side: document.querySelector('input[name="rsvp-side"]:checked')?.value || "Chưa chọn",
-                status: document.querySelector('input[name="rsvp-status"]:checked')?.value || "Chưa chọn",
-                guests: document.getElementById("rsvp-guests").value,
-                wishes: document.getElementById("rsvp-wishes").value,
-                date: new Date().toLocaleString('vi-VN')
-            };
+    // Link mới của bạn ở đây
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwjyOKGwEoZZO0x21xYJW2eu3tGEVl9FfdHgJsWhiOHqJDjKQerp34Yf-Ec-4KtP1JG/exec";
 
-            const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxt_vJZhocZ11SB0sd4Nw8mey8ltSE5JxCeFx_BIbz5rtm4YfACwdNHO2D2NzqdwKH0/exec";
-
-            try {
-                await fetch(SCRIPT_URL, {
-                    method: "POST",
-                    mode: "no-cors",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(formData)
-                });
-                alert("Cảm ơn bạn đã xác nhận tham dự cùng chúng tôi!");
-                document.getElementById("rsvp-form").reset(); 
-            } catch (error) {
-                console.error('Lỗi:', error);
-                alert("Có chút lỗi nhỏ, bạn vui lòng thử lại nhé!");
-            } finally {
-                submitBtn.innerText = originalText;
-                submitBtn.disabled = false;
-            }
+    try {
+        const response = await fetch(SCRIPT_URL, {
+            method: "POST",
+            mode: "cors", // Dùng cors thay vì no-cors
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(formData)
+        });
+        
+        const result = await response.json();
+        
+        if (result.result === "success") {
+            alert("Đã gửi lời chúc thành công!");
+            document.getElementById("rsvp-form").reset();
+            // Nếu bạn muốn hiện popup, để đoạn success-modal ở đây
+        } else {
+            alert("Có lỗi xảy ra: " + result.error);
         }
+    } catch (error) {
+        console.error("Lỗi:", error);
+        alert("Không thể gửi dữ liệu, hãy kiểm tra lại kết nối!");
+    }
+}
     </script>
 
            <!-- BỨC TƯỜNG CHÚC PHÚC: SỔ LƯU BÚT POLAROID -->
