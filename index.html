@@ -515,8 +515,8 @@
         </form>
     </section>
 
-    <!-- BỨC TƯỜNG CHÚC PHÚC: SỔ LƯU BÚT POLAROID (ĐÃ BỌC THÊM KHUNG CUỘN GỌN) -->
-<section id="guestbook" class="py-16 px-6 traditional-light-pattern text-stone-800 overflow-hidden">
+    <section id="guestbook" class="py-16 px-6 traditional-light-pattern text-stone-800 overflow-hidden">
+    <!-- Header giữ nguyên -->
     <div class="text-center mb-10 reveal-element">
         <span class="font-cursive text-weddingRed text-3xl">Lời gửi gắm</span>
         <h2 class="font-serif text-xl font-bold text-weddingRed-dark uppercase tracking-[0.2em] mt-1">Sổ Lưu Bút Polaroid</h2>
@@ -525,15 +525,16 @@
     </div>
 
     <!-- KHUNG ĐIỀU KHIỂN CHIỀU CAO (Wrapper) -->
-    <div id="wishes-wrapper" class="relative max-h-[600px] overflow-hidden transition-all duration-500 ease-in-out">
+    <!-- Đây là thứ giúp bạn cuộn gọn, bên trong vẫn giữ nguyên id="wishes-wall" -->
+    <div id="wishes-wrapper" class="relative max-h-[600px] overflow-hidden transition-all duration-700 ease-in-out">
         
-        <!-- ID 'wishes-wall' của bạn vẫn được giữ nguyên ở đây, JS sẽ đổ dữ liệu vào đây bình thường -->
+        <!-- ID NÀY GIỮ NGUYÊN - Hàm JS của bạn đổ dữ liệu vào đây sẽ hoạt động bình thường -->
         <div class="max-w-md mx-auto grid grid-cols-2 gap-4" id="wishes-wall">
             <!-- Nội dung lời chúc được nạp từ javascript -->
         </div>
 
         <!-- Hiệu ứng gradient mờ ở cuối khung -->
-        <div id="wishes-fade" class="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-stone-50 to-transparent pointer-events-none transition-opacity duration-300"></div>
+        <div id="wishes-fade" class="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-[#faf5eb] to-transparent pointer-events-none transition-opacity duration-300"></div>
     </div>
 
     <!-- Nút Xem thêm / Thu gọn -->
@@ -556,20 +557,20 @@
         const btn = document.getElementById('toggle-wishes-btn');
         const fade = document.getElementById('wishes-fade');
 
-        // Nếu đang ở trạng thái thu gọn (max-h-[600px])
+        // Nếu đang ở trạng thái thu gọn
         if (wrapper.classList.contains('max-h-[600px]')) {
             wrapper.classList.remove('max-h-[600px]');
-            wrapper.classList.add('max-h-[3000px]'); // Mở rộng ra
+            wrapper.classList.add('max-h-[5000px]'); // Mở rộng lớn để chứa hết
             fade.classList.add('opacity-0'); // Mờ hiệu ứng gradient
             btn.innerText = 'Thu gọn';
         } else {
-            // Đang mở, giờ thu gọn lại
-            wrapper.classList.remove('max-h-[3000px]');
+            // Đang mở, thu gọn lại
+            wrapper.classList.remove('max-h-[5000px]');
             wrapper.classList.add('max-h-[600px]');
             fade.classList.remove('opacity-0');
             btn.innerText = 'Xem thêm lời chúc';
             
-            // Cuộn lên để người dùng không thấy bị mất không gian
+            // Cuộn lên để người dùng không bị mất không gian
             wrapper.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
     }
