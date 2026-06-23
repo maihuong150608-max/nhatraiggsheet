@@ -997,87 +997,35 @@
         }
 
         // XỬ LÝ NỘP RSVP ĐỒNG BỘ GOOGLE SHEETS & HIỂN THỊ LÊN POLAROID WALL
-        async function handleRSVP(e) {
-            e.preventDefault();
-            
-            const submitBtn = document.querySelector("#rsvp-form button[type='submit']");
-            const originalBtnText = submitBtn.innerHTML;
-            
-            // Thu thập dữ liệu từ các trường nhập liệu
-            const name = document.getElementById('rsvp-name').value;
-            const side = document.querySelector('input[name="rsvp-side"]:checked')?.value || "Chưa chọn";
-            const status = document.querySelector('input[name="rsvp-status"]:checked')?.value || "Chưa chọn";
-            const guests = document.getElementById('rsvp-guests').value;
-            const wishes = document.getElementById('rsvp-wishes').value || "Rất vinh hạnh được đến tham gia tiệc cưới!";
-            const dateStr = new Date().toLocaleDateString('vi-VN', {day: '2-digit', month: '2-digit', year: 'numeric'});
+      async function handleRSVP(event) {
+    event.preventDefault();
+    
+    const formData = {
+        name: document.getElementById("rsvp-name").value,
+        side: document.querySelector('input[name="rsvp-side"]:checked')?.value || "N/A",
+        status: document.querySelector('input[name="rsvp-status"]:checked')?.value || "N/A",
+        guests: document.getElementById("rsvp-guests").value,
+        wishes: document.getElementById("rsvp-wishes").value
+    };
 
-            const formData = {
-                name: name,
-                side: side,
-                status: status,
-                guests: guests,
-                wishes: wishes
-            };
+    // Dán link mới copy ở bước 1 vào đây
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxNMcSwbPRCLT2JVDpe4K7jx0J_wt1JJHvtcNd-ijiSY-f2mhD3A14YvpBtjnP804i_/exec";
 
-            // Khóa nút gửi và hiển thị trạng thái đang xử lý
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<i class="fa-solid fa-circle-notch animate-spin mr-2"></i> Đang gửi thông tin...';
-
-            // URL Web App từ Google Apps Script của bạn
-            const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxNMcSwbPRCLT2JVDpe4K7jx0J_wt1JJHvtcNd-ijiSY-f2mhD3A14YvpBtjnP804i_/exec";
-
-            try {
-                   const response = await fetch(SCRIPT_URL, {
-                        method: "POST",
-                        mode: "cors", // CHỈ ĐỂ "cors"
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify(formData)
-                    });
-                
-                const result = await response.json();
-                
-                if (result.result === "success") {
-                    // 1. Lưu cục bộ để tạo ngay một thẻ Polaroid đẹp mắt trên giao diện mà không cần load lại trang
-                    const entry = {
-                        name: name,
-                        side: side,
-                        wishes: wishes,
-                        date: dateStr
-                    };
-                    
-                    let stored = JSON.parse(localStorage.getItem('cinelove_polaroid_wishes')) || [];
-                    stored.unshift(entry);
-                    localStorage.setItem('cinelove_polaroid_wishes', JSON.stringify(stored));
-                    
-                    // 2. Đồng bộ lại sổ lưu bút
-                    fetchWishes();
-                    
-                    // 3. Reset form nhập liệu
-                    document.getElementById('rsvp-form').reset();
-                    
-                    // 4. Mở modal báo gửi thành công xịn xò
-                    document.getElementById('success-modal').classList.remove('hidden');
-
-                    // 5. Hiệu ứng cơn mưa tim ngọt ngào bung tỏa
-                    for (let i = 0; i < 35; i++) {
-                        particles.push(new Particle('heart', true));
-                    }
-                } else {
-                    alert("Có lỗi từ hệ thống Google: " + result.error);
-                }
-            } catch (error) {
-                console.error("Lỗi kết nối mạng:", error);
-                alert("Không thể kết nối lưu trữ! Bạn vui lòng kiểm tra lại kết nối mạng hoặc thử lại.");
-            } finally {
-                // Khôi phục nút bấm về trạng thái ban đầu
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = originalBtnText;
-            }
-        }
-
-        function closeSuccessModal() {
-            document.getElementById('success-modal').classList.add('hidden');
-        }
+    try {
+        await fetch(SCRIPT_URL, {
+            method: "POST",
+            mode: "no-cors",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(formData)
+        });
+        
+        // Hiện modal thành công
+        document.getElementById('success-modal').classList.remove('hidden');
+        document.getElementById("rsvp-form").reset();
+    } catch (error) {
+        alert("Lỗi kết nối, vui lòng thử lại sau!");
+    }
+}
 
         window.addEventListener('DOMContentLoaded', () => {
             fetchWishes();
