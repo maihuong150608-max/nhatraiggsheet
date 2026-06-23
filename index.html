@@ -1027,12 +1027,12 @@
             const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwjyOKGwEoZZO0x21xYJW2eu3tGEVl9FfdHgJsWhiOHqJDjKQerp34Yf-Ec-4KtP1JG/exec";
 
             try {
-                const response = await fetch(SCRIPT_URL, {
-                    method: "POST",
-                    mode: "cors",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(formData)
-                });
+                   const response = await fetch(SCRIPT_URL, {
+                        method: "POST",
+                        mode: "cors", // CHỈ ĐỂ "cors"
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(formData)
+                    });
                 
                 const result = await response.json();
                 
