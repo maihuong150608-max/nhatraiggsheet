@@ -516,43 +516,36 @@
     </section>
 
     <!-- BỨC TƯỜNG CHÚC PHÚC: SỔ LƯU BÚT POLAROID -->
-    <section id="guestbook" class="py-16 px-6 traditional-light-pattern text-stone-800 overflow-hidden">
-            <div class="text-center mb-10 reveal-element">
-                <span class="font-cursive text-weddingRed text-3xl">Lời gửi gắm</span>
-                <h2 class="font-serif text-xl font-bold text-weddingRed-dark uppercase tracking-[0.2em] mt-1">Sổ Lưu Bút Polaroid</h2>
-                <div class="w-12 h-[2px] bg-weddingGold mx-auto mt-2"></div>
-                <p class="text-[11px] text-stone-500 mt-2 uppercase tracking-widest font-semibold">Wishes Wall</p>
-            </div>
-            
-            <div class="max-w-md mx-auto grid grid-cols-2 gap-4" id="wishes-wall">
-                <!-- Nội dung lời chúc được nạp từ javascript -->
-            </div>
-            
-            <div class="text-center text-xs py-8 text-stone-400 font-sans hidden" id="no-wishes-placeholder">
-                <i class="fa-regular fa-folder-open text-2xl mb-2 text-weddingGold"></i>
-                <p>Hãy gửi lời chúc để dán Polaroid của bạn lên sổ nhé!</p>
-            </div>
-        </section>
-
-<!-- PHẦN LƯU BÚT ĐÃ ĐƯỢC THIẾT KẾ GỌN GÀNG -->
-<section id="wishes-section" class="py-12 bg-stone-50 px-6">
+    <section id="guestbook" class="py-16 px-6 bg-stone-50 text-stone-800 overflow-hidden">
     <div class="max-w-2xl mx-auto">
-        <h3 class="text-2xl font-serif text-weddingRed-dark text-center mb-6">Sổ Lưu Bút</h3>
+        <!-- Header tinh tế -->
+        <div class="text-center mb-10 reveal-element">
+            <span class="font-cursive text-weddingRed text-3xl">Lời gửi gắm</span>
+            <h2 class="font-serif text-xl font-bold text-weddingRed-dark uppercase tracking-[0.2em] mt-1">Sổ Lưu Bút Polaroid</h2>
+            <div class="w-12 h-[2px] bg-weddingGold mx-auto mt-2"></div>
+            <p class="text-[11px] text-stone-500 mt-2 uppercase tracking-widest font-semibold">Wishes Wall</p>
+        </div>
 
-        <!-- Khung chứa lời chúc với chiều cao giới hạn -->
+        <!-- Khung chứa lời chúc (Rút gọn) -->
         <div id="wishes-container" class="relative max-h-[600px] overflow-hidden transition-all duration-500 ease-in-out">
-            <div id="wishes-list" class="space-y-4">
+            <div id="wishes-list" class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <!-- Nội dung lời chúc sẽ được đổ vào đây bởi JS -->
+                <!-- Ví dụ một thẻ lời chúc:
+                <div class="bg-white p-4 rounded-lg shadow-sm border border-stone-100">
+                    <p class="text-sm font-semibold text-weddingRed-dark">Tên khách</p>
+                    <p class="text-xs text-stone-600 mt-1">Lời chúc ngọt ngào...</p>
+                </div> 
+                -->
             </div>
             
             <!-- Hiệu ứng gradient mờ ở cuối khung -->
-            <div id="wishes-fade" class="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-stone-50 to-transparent pointer-events-none"></div>
+            <div id="wishes-fade" class="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-stone-50 to-transparent pointer-events-none transition-opacity duration-500"></div>
         </div>
 
         <!-- Nút Xem thêm / Thu gọn -->
-        <div class="text-center mt-6">
+        <div class="text-center mt-8">
             <button id="toggle-wishes-btn" onclick="toggleWishes()" 
-                    class="bg-white border border-weddingRed text-weddingRed px-6 py-2 rounded-full text-xs font-bold uppercase tracking-widest hover:bg-weddingRed hover:text-white transition-all shadow-sm">
+                    class="bg-white border border-weddingRed text-weddingRed px-8 py-3 rounded-full text-xs font-bold uppercase tracking-widest hover:bg-weddingRed hover:text-white transition-all shadow-md">
                 Xem thêm lời chúc
             </button>
         </div>
@@ -565,21 +558,22 @@
         const btn = document.getElementById('toggle-wishes-btn');
         const fade = document.getElementById('wishes-fade');
 
+        // Logic đóng/mở
         if (container.classList.contains('max-h-[600px]')) {
             // Mở rộng
             container.classList.remove('max-h-[600px]');
-            container.classList.add('max-h-[2000px]'); // Đủ cao để chứa hết
-            fade.classList.add('hidden'); // Ẩn hiệu ứng mờ
-            btn.innerText = 'Thu gọn';
+            container.classList.add('max-h-[3000px]'); // Đủ cao để chứa hết lời chúc
+            fade.classList.add('opacity-0'); // Mờ dần hiệu ứng gradient
+            btn.innerText = 'Thu gọn sổ lưu bút';
         } else {
             // Thu gọn
-            container.classList.remove('max-h-[2000px]');
+            container.classList.remove('max-h-[3000px]');
             container.classList.add('max-h-[600px]');
-            fade.classList.remove('hidden'); // Hiện lại hiệu ứng mờ
+            fade.classList.remove('opacity-0'); // Hiện lại gradient
             btn.innerText = 'Xem thêm lời chúc';
             
-            // Cuộn trang lên một chút để không bị "hụt" khi thu gọn
-            container.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            // Cuộn trang lên nhẹ nhàng để người dùng không bị "hụt"
+            container.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
     }
 </script>
